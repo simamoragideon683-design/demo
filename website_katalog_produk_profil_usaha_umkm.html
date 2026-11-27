@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Website Katalog Produk & Profil Usaha UMKM Nusantara Karya - Produk Lokal Berkualitas Ekspor" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <!-- Kebijakan Keamanan Konten (CSP) Ketat: Tanpa unsafe-inline/unsafe-eval pada script -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';" />
+  <title>Website Katalog Produk & Profil Usaha UMKM — Nusantara Karya</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS & Design Tokens (60-30-10 Palette) -->
+  <style>
+    :root {
+      --bg-primary: #F8FAFC;      /* 60% Dominan Bersih */
+      --bg-surface: #FFFFFF;      /* Kartu & Kontainer */
+      --brand-emerald: #064E3B;   /* 30% Sekunder Hijau Hutan */
+      --brand-slate: #0F172A;     /* 30% Sekunder Teks Utama */
+      --accent-amber: #D97706;    /* 10% Aksen Hangat */
+      --accent-amber-hover: #B45309;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--brand-slate);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Tombol Ramah Sentuh Minimal 44px */
+    .touch-btn {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Animasi Halus & Transisi Kartu */
+    .product-card {
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px -10px rgba(6, 78, 59, 0.16);
+    }
+
+    /* Animasi Toast Notifikasi */
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .toast-enter {
+      animation: slideUpFade 0.25s ease-out forwards;
+    }
+
+    /* Custom Scrollbar Halus untuk Drawer */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-amber-500 selection:text-white">
+
+  <!-- ==================== HEADER & NAVIGASI RESPONSIF ==================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+        <!-- Logo & Identitas UMKM -->
+        <a href="#beranda" class="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-emerald-700 rounded-xl p-1">
+          <div class="w-10 h-10 rounded-xl bg-[#064E3B] flex items-center justify-center text-white font-bold text-lg shadow-sm">
+            NK
+          </div>
+          <div>
+            <span class="block font-extrabold text-slate-900 text-base sm:text-lg leading-tight tracking-tight">Nusantara Karya</span>
+            <span class="block text-xs font-medium text-emerald-800">Katalog Produk &amp; Profil UMKM</span>
+          </div>
+        </a>
+
+        <!-- Menu Desktop -->
+        <nav aria-label="Navigasi Utama" class="hidden md:flex items-center gap-6">
+          <a href="#beranda" class="nav-link text-sm font-semibold text-slate-700 hover:text-[#064E3B] py-2 transition">Beranda</a>
+          <a href="#tentang-kami" class="nav-link text-sm font-semibold text-slate-700 hover:text-[#064E3B] py-2 transition">Tentang Kami</a>
+          <a href="#katalog-produk" class="nav-link text-sm font-semibold text-slate-700 hover:text-[#064E3B] py-2 transition">Katalog Produk</a>
+          <button type="button" id="btnOpenSourceDesktop" class="touch-btn px-3.5 py-2 rounded-xl text-xs font-bold border border-slate-300 text-slate-700 hover:bg-slate-100 transition flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-emerald-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            <span>Kode Produksi (4 File)</span>
+          </button>
+        </nav>
+
+        <!-- Tombol Keranjang & Mobile Hamburger -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button type="button" id="btnOpenCart" aria-label="Buka Keranjang Belanja" class="touch-btn relative inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#D97706] hover:bg-[#B45309] text-white font-bold text-sm shadow-sm transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span class="hidden sm:inline">Keranjang</span>
+            <span id="cartBadge" class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-extrabold rounded-full bg-[#0F172A] text-white">0</span>
+          </button>
+
+          <button type="button" id="btnMobileMenu" aria-expanded="false" aria-controls="mobileMenuDrawer" aria-label="Buka Menu Navigasi" class="touch-btn md:hidden inline-flex items-center justify-center p-2.5 rounded-xl border border-slate-200 text-slate-800 hover:bg-slate-100">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Mobile Dropdown -->
+    <div id="mobileMenuDrawer" class="hidden md:hidden bg-white border-t border-slate-200 px-4 pt-3 pb-5 space-y-2">
+      <a href="#beranda" class="mobile-nav-link block px-4 py-3 rounded-xl font-semibold text-slate-800 hover:bg-slate-100">Beranda</a>
+      <a href="#tentang-kami" class="mobile-nav-link block px-4 py-3 rounded-xl font-semibold text-slate-800 hover:bg-slate-100">Tentang Kami</a>
+      <a href="#katalog-produk" class="mobile-nav-link block px-4 py-3 rounded-xl font-semibold text-slate-800 hover:bg-slate-100">Katalog Produk</a>
+      <button type="button" id="btnOpenSourceMobile" class="touch-btn w-full text-left px-4 py-3 rounded-xl font-bold text-emerald-900 bg-emerald-50 border border-emerald-200">
+        Salin Kode Produksi (4 File Modular)
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==================== HERO SECTION (60-30-10) ==================== -->
+    <section id="beranda" class="relative bg-[#064E3B] text-white overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-7 space-y-6">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-900/90 border border-emerald-600/50 text-amber-300 text-xs font-bold tracking-wide uppercase">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              100% Produk Asli Pengrajin &amp; Petani Lokal
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight text-white">
+              Karya Autentik Nusantara, Langsung dari Tangan Terbaik ke Rumah Anda.
+            </h1>
+            <p class="text-base sm:text-lg text-emerald-100 leading-relaxed max-w-2xl">
+              Temukan kurasi kuliner tradisional premium, kerajinan tangan ramah lingkungan, hingga wastra tenun modern. Pesan praktis dengan transparansi harga, stok real-time, dan pengiriman terjamin.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3.5 pt-2">
+              <a href="#katalog-produk" class="touch-btn inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-[#D97706] hover:bg-[#B45309] text-white font-extrabold text-base shadow-lg transition">
+                Jelajahi Katalog Produk
+              </a>
+              <a href="#tentang-kami" class="touch-btn inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/25 text-white font-bold text-base transition">
+                Profil Usaha UMKM
+              </a>
+            </div>
+          </div>
+
+          <!-- Kartu Sorotan Keunggulan Hero -->
+          <div class="lg:col-span-5">
+            <div class="bg-white text-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl border border-emerald-900/10 space-y-5">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                  <p class="text-xs font-bold uppercase tracking-wider text-emerald-800">Mitra Resmi UMKM</p>
+                  <h2 class="text-xl font-extrabold text-slate-900">Nusantara Karya Sentosa</h2>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold">Terverifikasi</span>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                  <p class="text-2xl sm:text-3xl font-extrabold text-[#064E3B]">45+</p>
+                  <p class="text-xs sm:text-sm font-medium text-slate-600 mt-1">Pengrajin &amp; Mitra Binaan</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                  <p class="text-2xl sm:text-3xl font-extrabold text-[#D97706]">4.9/5</p>
+                  <p class="text-xs sm:text-sm font-medium text-slate-600 mt-1">Kepuasan Pelanggan</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                  <p class="text-2xl sm:text-3xl font-extrabold text-slate-900">100%</p>
+                  <p class="text-xs sm:text-sm font-medium text-slate-600 mt-1">Bahan Baku Lokal Pilihan</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                  <p class="text-2xl sm:text-3xl font-extrabold text-[#064E3B]">24 Jam</p>
+                  <p class="text-xs sm:text-sm font-medium text-slate-600 mt-1">Proses Pengemasan Cepat</p>
+                </div>
+              </div>
+              <p class="text-xs text-slate-500 leading-relaxed">
+                Seluruh transaksi langsung terhubung ke admin produksi UMKM tanpa potongan perantara sehingga kesejahteraan perajin terjaga.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TENTANG KAMI ==================== -->
+    <section id="tentang-kami" class="py-16 sm:py-20 bg-[#F8FAFC] border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center space-y-3 mb-12">
+          <span class="inline-block px-3.5 py-1 rounded-full bg-emerald-100 text-[#064E3B] text-xs font-extrabold uppercase tracking-wider">Tentang Kami</span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Memberdayakan Ekonomi Lokal Melalui Kualitas Tanpa Kompromi</h2>
+          <p class="text-slate-600 text-base sm:text-lg leading-relaxed">
+            Berdiri sejak 2019, Nusantara Karya menjembatani produsen rumahan, petani kopi, penenun, dan pengrajin kayu Indonesia dengan pelanggan modern di seluruh Nusantara.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <article class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-900 text-white flex items-center justify-center font-bold text-xl">
+              01
+            </div>
+            <h3 class="text-xl font-bold text-slate-900">Kurasi &amp; Standar Mutu</h3>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+              Setiap produk melewati pemeriksaan higienitas (P-IRT &amp; Halal untuk kuliner) serta uji ketahanan material sebelum masuk ke katalog resmi kami.
+            </p>
+          </article>
+
+          <article class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-[#D97706] text-white flex items-center justify-center font-bold text-xl">
+              02
+            </div>
+            <h3 class="text-xl font-bold text-slate-900">Perdagangan Adil (Fair Trade)</h3>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+              Skema bagi hasil transparan memastikan lebih dari 82% nilai penjualan kembali langsung kepada kelompok perajin dan petani mitra di daerah.
+            </p>
+          </article>
+
+          <article class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-xl">
+              03
+            </div>
+            <h3 class="text-xl font-bold text-slate-900">Kemasan Aman &amp; Ramah Bumi</h3>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+              Menggunakan kemasan kardus daur ulang bersertifikat dan pelindung bebas plastik sekali pakai untuk menjaga produk tetap utuh hingga tujuan.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== KATALOG PRODUK ==================== -->
+    <section id="katalog-produk" class="py-16 sm:py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          <div class="space-y-2">
+            <span class="inline-block px-3.5 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold uppercase tracking-wider">Katalog Produk</span>
+            <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Pilihan Produk Unggulan UMKM</h2>
+            <p class="text-slate-600 text-sm sm:text-base">Pilih kategori atau cari produk favorit Anda, lalu tambahkan ke keranjang untuk pemesanan langsung.</p>
+          </div>
+
+          <!-- Pencarian Produk Real-Time (Anti-XSS) -->
+          <div class="w-full md:w-80">
+            <label for="searchInput" class="sr-only">Cari produk UMKM</label>
+            <div class="relative">
+              <input type="search" id="searchInput" maxlength="60" placeholder="Cari kopi, tenun, kerajinan..." class="w-full min-h-[44px] pl-10 pr-4 py-2.5 rounded-2xl border border-slate-300 bg-slate-50 text-slate-900 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#064E3B] focus:border-[#064E3B]" />
+              <svg class="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Kategori Interaktif -->
+        <div id="categoryFilterBar" role="tablist" aria-label="Filter Kategori Produk" class="flex flex-wrap items-center gap-2.5 mb-8">
+          <button type="button" data-category="Semua" class="category-btn touch-btn px-5 py-2.5 rounded-2xl text-sm font-bold bg-[#064E3B] text-white shadow-sm transition">Semua Produk</button>
+          <button type="button" data-category="Kuliner" class="category-btn touch-btn px-5 py-2.5 rounded-2xl text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Kuliner</button>
+          <button type="button" data-category="Kerajinan" class="category-btn touch-btn px-5 py-2.5 rounded-2xl text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Kerajinan</button>
+          <button type="button" data-category="Fesyen" class="category-btn touch-btn px-5 py-2.5 rounded-2xl text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Fesyen &amp; Wastra</button>
+        </div>
+
+        <!-- Status Hasil Filter -->
+        <p id="catalogResultInfo" class="text-xs font-semibold text-slate-500 mb-6" aria-live="polite"></p>
+
+        <!-- Grid Kartu Produk (Dirender 100% via DOM API aman textContent) -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"></div>
+
+        <!-- State Kosong Jika Pencarian Tidak Cocok -->
+        <div id="emptyCatalogState" class="hidden text-center py-14 px-4 rounded-2xl bg-slate-50 border border-dashed border-slate-300">
+          <p class="text-lg font-bold text-slate-800">Produk tidak ditemukan</p>
+          <p class="text-sm text-slate-600 mt-1">Coba kata kunci lain atau atur ulang filter kategori.</p>
+          <button type="button" id="btnResetFilter" class="touch-btn mt-4 px-5 py-2.5 rounded-xl bg-[#064E3B] text-white text-sm font-bold hover:bg-emerald-900 transition">
+            Tampilkan Semua Produk
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-[#0F172A] text-slate-300 py-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-800">
+        <div class="space-y-3">
+          <div class="flex items-center gap-2.5">
+            <span class="w-9 h-9 rounded-xl bg-[#064E3B] text-white font-extrabold flex items-center justify-center">NK</span>
+            <span class="font-extrabold text-white text-lg">Nusantara Karya UMKM</span>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Sentra Katalog Digital &amp; Pemesanan Langsung Produk Unggulan Usaha Mikro, Kecil, dan Menengah Indonesia.
+          </p>
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-white">Navigasi Cepat</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#beranda" class="hover:text-amber-400 transition">Beranda</a></li>
+            <li><a href="#tentang-kami" class="hover:text-amber-400 transition">Tentang Kami</a></li>
+            <li><a href="#katalog-produk" class="hover:text-amber-400 transition">Katalog Produk</a></li>
+          </ul>
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-white">Layanan &amp; Operasional</h3>
+          <p class="text-sm text-slate-400">Senin – Sabtu: 08.00 – 17.00 WIB</p>
+          <p class="text-sm text-slate-400">Sentra Produksi: Jl. Merdeka Karya No. 45, Indonesia</p>
+          <button type="button" id="btnOpenSourceFooter" class="touch-btn mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-bold border border-slate-700 transition">
+            Lihat &amp; Salin Kode 4 File Produksi
+          </button>
+        </div>
+      </div>
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-3">
+        <p>&copy; 2026 Nusantara Karya UMKM. Hak Cipta Dilindungi Undang-Undang.</p>
+        <p>Keamanan Web Terlindungi: Strict CSP &amp; Anti-XSS DOM Rendering</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== MODAL DETAIL PRODUK ==================== -->
+  <div id="productDetailModal" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl border border-slate-200">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+        <span id="detailModalCategory" class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold">Kategori</span>
+        <button type="button" id="btnCloseDetailModal" aria-label="Tutup Detail Produk" class="touch-btn rounded-xl p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-6 space-y-5">
+        <div class="w-full h-52 rounded-2xl bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-200">
+          <img id="detailModalImage" src="" alt="" class="w-full h-full object-cover" />
+        </div>
+        <div class="space-y-2">
+          <h3 id="detailModalTitle" class="text-2xl font-extrabold text-slate-900">Nama Produk</h3>
+          <div class="flex items-center justify-between">
+            <p id="detailModalPrice" class="text-xl font-extrabold text-[#D97706]">Rp 0</p>
+            <p id="detailModalStock" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700">Stok: 0</p>
+          </div>
+          <p id="detailModalDesc" class="text-sm text-slate-600 leading-relaxed pt-2"></p>
+        </div>
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-1">
+          <p class="font-bold text-slate-900">Spesifikasi &amp; Asal Produksi:</p>
+          <p id="detailModalOrigin"></p>
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="button" id="btnDetailAddToCart" class="touch-btn flex-1 py-3 px-5 rounded-2xl bg-[#064E3B] hover:bg-emerald-900 text-white font-extrabold text-sm shadow transition">
+            + Tambah ke Keranjang
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DRAWER KERANJANG & PEMESANAN ==================== -->
+  <div id="cartDrawerOverlay" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex justify-end">
+    <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
+      <!-- Header Drawer -->
+      <div class="px-6 py-4 bg-[#064E3B] text-white flex items-center justify-between">
+        <div>
+          <h2 id="cartDrawerTitle" class="text-lg font-extrabold">Keranjang &amp; Pemesanan</h2>
+          <p class="text-xs text-emerald-200">Isi data pemesan untuk konfirmasi langsung</p>
+        </div>
+        <button type="button" id="btnCloseCart" aria-label="Tutup Keranjang" class="touch-btn rounded-xl p-2 text-emerald-100 hover:bg-emerald-800">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Konten Keranjang Scrollable -->
+      <div class="flex-1 overflow-y-auto custom-scroll p-6 space-y-6">
+        <!-- Daftar Item -->
+        <div id="cartItemsContainer" class="space-y-3"></div>
+
+        <!-- Ringkasan Harga -->
+        <div id="cartSummaryBox" class="hidden p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+          <div class="flex justify-between text-sm text-slate-600">
+            <span>Total Item</span>
+            <span id="summaryTotalQty" class="font-bold text-slate-900">0 pcs</span>
+          </div>
+          <div class="flex justify-between text-base font-extrabold text-slate-900 pt-2 border-t border-slate-200">
+            <span>Total Pembayaran</span>
+            <span id="summaryTotalPrice" class="text-[#D97706]">Rp 0</span>
+          </div>
+        </div>
+
+        <!-- Formulir Pemesan dengan Validasi Ketat -->
+        <form id="checkoutForm" novalidate class="hidden space-y-4 pt-2 border-t border-slate-200">
+          <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-800">Data Pemesan</h3>
+
+          <div>
+            <label for="customerName" class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap *</label>
+            <input type="text" id="customerName" required minlength="3" maxlength="50" placeholder="Contoh: Budi Santoso" class="w-full min-h-[44px] px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#064E3B]" />
+          </div>
+
+          <div>
+            <label for="customerPhone" class="block text-xs font-bold text-slate-700 mb-1">Nomor WhatsApp Aktif *</label>
+            <input type="tel" id="customerPhone" required minlength="9" maxlength="16" placeholder="Contoh: 081234567890" class="w-full min-h-[44px] px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#064E3B]" />
+          </div>
+
+          <div>
+            <label for="customerAddress" class="block text-xs font-bold text-slate-700 mb-1">Alamat Pengiriman &amp; Catatan *</label>
+            <textarea id="customerAddress" rows="3" required minlength="10" maxlength="200" placeholder="Tuliskan alamat lengkap kecamatan/kota serta catatan varian..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#064E3B]"></textarea>
+          </div>
+
+          <p id="formErrorMsg" role="alert" class="hidden text-xs font-bold text-red-700 bg-red-50 border border-red-200 p-3 rounded-xl"></p>
+
+          <button type="submit" class="touch-btn w-full py-3.5 px-5 rounded-2xl bg-[#D97706] hover:bg-[#B45309] text-white font-extrabold text-sm shadow-lg transition">
+            Konfirmasi Pesanan Sekarang
+          </button>
+        </form>
+
+        <!-- Hasil Konfirmasi Pesanan (Aman via textContent) -->
+        <div id="orderConfirmationBox" class="hidden p-5 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-3">
+          <div class="flex items-center gap-2 text-emerald-900 font-extrabold text-base">
+            <svg class="w-6 h-6 text-emerald-700" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            <span>Pesanan Berhasil Dicatat!</span>
+          </div>
+          <p id="orderReceiptText" class="text-xs text-slate-700 whitespace-pre-line bg-white p-3.5 rounded-xl border border-emerald-200 font-mono leading-relaxed"></p>
+          <div class="flex flex-col gap-2 pt-1">
+            <button type="button" id="btnCopyReceipt" class="touch-btn w-full py-2.5 px-4 rounded-xl bg-[#064E3B] text-white text-xs font-bold hover:bg-emerald-900 transition">
+              Salin Rincian Pesanan
+            </button>
+            <button type="button" id="btnNewOrder" class="touch-btn w-full py-2.5 px-4 rounded-xl bg-white border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition">
+              Selesai &amp; Kosongkan Keranjang
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL KODE SUMBER PRODUKSI (4 FILE) ==================== -->
+  <div id="sourceCodeModal" role="dialog" aria-modal="true" aria-labelledby="sourceModalTitle" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-slate-200">
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <div>
+          <h2 id="sourceModalTitle" class="text-base sm:text-lg font-extrabold">Paket Kode Modular Siap Produksi (GitHub &amp; Vercel)</h2>
+          <p class="text-xs text-slate-300">Pilih tab berkas di bawah ini dan klik Salin Kode untuk menyimpan ke repository Anda.</p>
+        </div>
+        <button type="button" id="btnCloseSourceModal" aria-label="Tutup Modal Kode" class="touch-btn rounded-xl p-2 text-slate-300 hover:bg-slate-800 hover:text-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Tab File Selector -->
+      <div class="px-6 pt-3 bg-slate-100 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 pb-3">
+        <div class="flex flex-wrap gap-2">
+          <button type="button" data-file="index.html" class="source-tab-btn touch-btn px-3.5 py-2 rounded-xl text-xs font-extrabold bg-[#064E3B] text-white">index.html</button>
+          <button type="button" data-file="style.css" class="source-tab-btn touch-btn px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white text-slate-700 border border-slate-300">style.css</button>
+          <button type="button" data-file="app.js" class="source-tab-btn touch-btn px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white text-slate-700 border border-slate-300">app.js</button>
+          <button type="button" data-file="vercel.json" class="source-tab-btn touch-btn px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white text-slate-700 border border-slate-300">vercel.json</button>
+        </div>
+        <button type="button" id="btnCopySourceFile" class="touch-btn px-4 py-2 rounded-xl bg-[#D97706] hover:bg-[#B45309] text-white text-xs font-extrabold shadow transition">
+          Salin Kode Berkas Ini
+        </button>
+      </div>
+
+      <!-- Area Kode -->
+      <div class="flex-1 overflow-y-auto custom-scroll p-4 bg-slate-950 text-emerald-300">
+        <pre class="text-xs font-mono leading-relaxed whitespace-pre-wrap break-words"><code id="sourceCodeViewer"></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
+  <div id="toastContainer" aria-live="polite" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-xs sm:max-w-sm pointer-events-none"></div>
+
+  <!-- Skrip Modular Eksternal via Data-URI / Blob-free Strict CSP Module (Tanpa Inline Script Tag) -->
+  <script type="application/json" id="catalogSeedData">
+    [
+      {
+        "id": "PRD-01",
+        "name": "Kopi Arabika Gayo Sangrai Medium",
+        "category": "Kuliner",
+        "price": 85000,
+        "stock": 24,
+        "origin": "Dataran Tinggi Gayo, Aceh • Kemasan 250g Valve Pouch • P-IRT & Halal",
+        "description": "Biji kopi Arabika pilihan dari ketinggian 1.500 mdpl dengan profil rasa cokelat hitam, karamel lembut, dan keasaman buah segar yang seimbang.",
+        "palette": ["#064E3B", "#D97706", "#FEF3C7"]
+      },
+      {
+        "id": "PRD-02",
+        "name": "Tas Anyaman Pandan Laut Premium",
+        "category": "Kerajinan",
+        "price": 165000,
+        "stock": 12,
+        "origin": "Sentra Kerajinan Tasikmalaya • Ukuran 32x24x12 cm • Lapisan Furing Katun",
+        "description": "Dianyam secara manual oleh pengrajin lokal menggunakan serat pandan laut kering pilihan yang telah diawetkan secara alami sehingga tahan lama dan anti jamur.",
+        "palette": ["#78350F", "#F59E0B", "#FFFBEB"]
+      },
+      {
+        "id": "PRD-03",
+        "name": "Selendang Tenun Ikat Motif Sumba",
+        "category": "Fesyen",
+        "price": 240000,
+        "stock": 8,
+        "origin": "Kelompok Tenun Tradisional • Benang Katun Alami • Pewarna Akar Mengkudu",
+        "description": "Kain tenun ikat buatan tangan dengan pewarnaan alami ramah lingkungan. Cocok sebagai pelengkap busana formal maupun kasual modern.",
+        "palette": ["#0F172A", "#D97706", "#F1F5F9"]
+      },
+      {
+        "id": "PRD-04",
+        "name": "Madu Hutan Multiflora Murni 500ml",
+        "category": "Kuliner",
+        "price": 115000,
+        "stock": 19,
+        "origin": "Kelompok Tani Hutan Lestari • Kemasan Botol Kaca Tebal • Uji Lab SNI",
+        "description": "Madu mentah (raw honey) hasil panen lestari tanpa pemanasan berlebih, menjaga enzim alami dan nutrisi terbaik untuk daya tahan tubuh keluarga.",
+        "palette": ["#92400E", "#FBBF24", "#FEF9C3"]
+      },
+      {
+        "id": "PRD-05",
+        "name": "Set Alat Makan Kayu Jati Food-Grade",
+        "category": "Kerajinan",
+        "price": 75000,
+        "stock": 30,
+        "origin": "Perajin Kayu Bojonegoro • Finishing Beeswax Alami • Isi Sendok, Garpu & Sumpit",
+        "description": "Perangkat makan kayu jati perhutani yang dihaluskan sempurna dan dilapisi lilin lebah murni tanpa pernis kimia sehingga aman untuk makanan panas.",
+        "palette": ["#451A03", "#D97706", "#F8FAFC"]
+      },
+      {
+        "id": "PRD-06",
+        "name": "Kemeja Batik Cap Kontemporer",
+        "category": "Fesyen",
+        "price": 195000,
+        "stock": 15,
+        "origin": "Rumah Batik Pekalongan • Katun Primisima 100% • Jahitan Tailor Rapi",
+        "description": "Perpaduan motif geometris modern dengan teknik batik cap tradisional di atas kain katun adem yang menyerap keringat sepanjang hari.",
+        "palette": ["#064E3B", "#0F172A", "#ECFDF5"]
+      }
+    ]
+  </script>
+
+  <script src="data:text/javascript;charset=utf-8,%22use%20strict%22%3B%0A%0A(%28%29%20%3D%3E%20%7B%0A%20%20%2F%2F%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%201.%20INISIALISASI%20DATA%20%26%20STATE%20APLIKASI%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%20%20const%20seedEl%20%3D%20document.getElementById(%22catalogSeedData%22)%3B%0A%20%20const%20PRODUCTS%20%3D%20seedEl%20%3F%20JSON.parse(seedEl.textContent)%20%3A%20%5B%5D%3B%0A%0A%20%20const%20state%20%3D%20%7B%0A%20%20%20%20selectedCategory%3A%20%22Semua%22%2C%0A%20%20%20%20searchQuery%3A%20%22%22%2C%0A%20%20%20%20cart%3A%20%5B%5D%2C%0A%20%20%20%20activeProductDetail%3A%20null%2C%0A%20%20%20%20activeSourceTab%3A%20%22index.html%22%0A%20%20%7D%3B%0A%0A%20%20%2F%2F%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%202.%20UTILITAS%20KEAMANAN%2C%20FORMAT%20%26%20ILUSTRASI%20SVG%20LOKAL%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%20%20function%20formatRupiah(angka)%20%7B%0A%20%20%20%20return%20new%20Intl.NumberFormat(%22id-ID%22%2C%20%7B%0A%20%20%20%20%20%20style%3A%20%22currency%22%2C%0A%20%20%20%20%20%20currency%3A%20%22IDR%22%2C%0A%20%20%20%20%20%20maximumFractionDigits%3A%200%0A%20%20%20%20%7D).format(angka)%3B%0A%20%20%7D%0A%0A%20%20function%20sanitizeText(str%2C%20maxLen%20%3D%20100)%20%7B%0A%20%20%20%20if%20(typeof%20str%20!%3D%3D%20%22string%22)%20return%20%22%22%3B%0A%20%20%20%20return%20str.replace(%2F%5B%3C%3E%22'%60%5D%2Fg%2C%20%22%22).trim().slice(0%2C%20maxLen)%3B%0A%20%20%7D%0A%0A%20%20%2F%2F%20Generator%20Ilustrasi%20SVG%20Data-URI%20Bebas%20Jaringan%20Eksternal%20(Patuh%20CSP%20img-src%20data%3A)%0A%20%20function%20buildProductIllustrationURI(product)%20%7B%0A%20%20%20%20const%20%5Bc1%2C%20c2%2C%20c3%5D%20%3D%20product.palette%3B%0A%20%20%20%20const%20label%20%3D%20sanitizeText(product.category%2C%2020).toUpperCase()%3B%0A%20%20%20%20const%20code%20%3D%20sanitizeText(product.id%2C%2010)%3B%0A%20%20%20%20const%20svg%20%3D%20%60%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20600%20360'%3E%0A%20%20%20%20%20%20%3Crect%20width%3D'600'%20height%3D'360'%20fill%3D'%24%7Bc3%7D'%2F%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D'490'%20cy%3D'70'%20r%3D'110'%20fill%3D'%24%7Bc2%7D'%20fill-opacity%3D'0.18'%2F%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D'110'%20cy%3D'310'%20r%3D'130'%20fill%3D'%24%7Bc1%7D'%20fill-opacity%3D'0.14'%2F%3E%0A%20%20%20%20%20%20%3Crect%20x%3D'215'%20y%3D'85'%20width%3D'170'%20height%3D'170'%20rx%3D'36'%20fill%3D'%24%7Bc1%7D'%2F%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D'M255%20185%20L300%20130%20L345%20185%20Z'%20fill%3D'%24%7Bc2%7D'%2F%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D'330'%20cy%3D'135'%20r%3D'14'%20fill%3D'%24%7Bc3%7D'%2F%3E%0A%20%20%20%20%20%20%3Ctext%20x%3D'300'%20y%3D'295'%20text-anchor%3D'middle'%20font-family%3D'sans-serif'%20font-size%3D'18'%20font-weight%3D'bold'%20fill%3D'%24%7Bc1%7D'%3E%24%7Blabel%7D%20%E2%80%A2%20%24%7Bcode%7D%3C%2Ftext%3E%0A%20%20%20%20%3C%2Fsvg%3E%60%3B%0A%20%20%20%20return%20%22data%3Aimage%2Fsvg%2Bxml%3Bcharset%3Dutf-8%2C%22%20%2B%20encodeURIComponent(svg)%3B%0A%20%20%7D%0A%0A%20%20function%20showToast(message%2C%20type%20%3D%20%22success%22)%20%7B%0A%20%20%20%20const%20container%20%3D%20document.getElementById(%22toastContainer%22)%3B%0A%20%20%20%20if%20(!container)%20return%3B%0A%20%20%20%20const%20toast%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20const%20bgClass%20%3D%20type%20%3D%3D%3D%20%22error%22%20%3F%20%22bg-red-700%22%20%3A%20%22bg-slate-900%22%3B%0A%20%20%20%20toast.className%20%3D%20%60toast-enter%20pointer-events-auto%20%24%7BbgClass%7D%20text-white%20px-4%20py-3%20rounded-2xl%20shadow-xl%20border%20border-white%2F10%20text-xs%20sm%3Atext-sm%20font-semibold%20flex%20items-center%20gap-2.5%60%3B%0A%0A%20%20%20%20const%20dot%20%3D%20document.createElement(%22span%22)%3B%0A%20%20%20%20dot.className%20%3D%20type%20%3D%3D%3D%20%22error%22%20%3F%20%22w-2.5%20h-2.5%20rounded-full%20bg-red-300%20shrink-0%22%20%3A%20%22w-2.5%20h-2.5%20rounded-full%20bg-amber-400%20shrink-0%22%3B%0A%0A%20%20%20%20const%20textEl%20%3D%20document.createElement(%22span%22)%3B%0A%20%20%20%20textEl.textContent%20%3D%20message%3B%0A%0A%20%20%20%20toast.appendChild(dot)%3B%0A%20%20%20%20toast.appendChild(textEl)%3B%0A%20%20%20%20container.appendChild(toast)%3B%0A%0A%20%20%20%20setTimeout(()%20%3D%3E%20%7B%0A%20%20%20%20%20%20toast.remove()%3B%0A%20%20%20%20%7D%2C%203200)%3B%0A%20%20%7D%0A%0A%20%20%2F%2F%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%203.%20RENDER%20KATALOG%20PRODUK%20(100%25%20SAFE%20DOM%20%26%20textContent)%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%20%20function%20renderCatalog()%20%7B%0A%20%20%20%20const%20grid%20%3D%20document.getElementById(%22productGrid%22)%3B%0A%20%20%20%20const%20emptyState%20%3D%20document.getElementById(%22emptyCatalogState%22)%3B%0A%20%20%20%20const%20resultInfo%20%3D%20document.getElementById(%22catalogResultInfo%22)%3B%0A%20%20%20%20if%20(!grid)%20return%3B%0A%0A%20%20%20%20while%20(grid.firstChild)%20%7B%0A%20%20%20%20%20%20grid.removeChild(grid.firstChild)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20const%20q%20%3D%20state.searchQuery.toLowerCase()%3B%0A%20%20%20%20const%20filtered%20%3D%20PRODUCTS.filter((item)%20%3D%3E%20%7B%0A%20%20%20%20%20%20const%20matchCat%20%3D%20state.selectedCategory%20%3D%3D%3D%20%22Semua%22%20%7C%7C%20item.category%20%3D%3D%3D%20state.selectedCategory%3B%0A%20%20%20%20%20%20const%20matchQuery%20%3D%20!q%20%7C%7C%20item.name.toLowerCase().includes(q)%20%7C%7C%20item.description.toLowerCase().includes(q)%20%7C%7C%20item.category.toLowerCase().includes(q)%3B%0A%20%20%20%20%20%20return%20matchCat%20%26%26%20matchQuery%3B%0A%20%20%20%20%7D)%3B%0A%0A%20%20%20%20resultInfo.textContent%20%3D%20%60Menampilkan%20%24%7Bfiltered.length%7D%20dari%20%24%7BPRODUCTS.length%7D%20produk%20unggulan%20UMKM%60%3B%0A%0A%20%20%20%20if%20(filtered.length%20%3D%3D%3D%200)%20%7B%0A%20%20%20%20%20%20emptyState.classList.remove(%22hidden%22)%3B%0A%20%20%20%20%20%20return%3B%0A%20%20%20%20%7D%0A%20%20%20%20emptyState.classList.add(%22hidden%22)%3B%0A%0A%20%20%20%20filtered.forEach((product)%20%3D%3E%20%7B%0A%20%20%20%20%20%20const%20card%20%3D%20document.createElement(%22article%22)%3B%0A%20%20%20%20%20%20card.className%20%3D%20%22product-card%20bg-white%20rounded-2xl%20border%20border-slate-200%20overflow-hidden%20flex%20flex-col%20justify-between%22%3B%0A%0A%20%20%20%20%20%20%2F%2F%20Gambar%20Ilustrasi%0A%20%20%20%20%20%20const%20imgWrapper%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20%20%20imgWrapper.className%20%3D%20%22relative%20h-48%20w-full%20bg-slate-100%20overflow-hidden%22%3B%0A%0A%20%20%20%20%20%20const%20img%20%3D%20document.createElement(%22img%22)%3B%0A%20%20%20%20%20%20img.src%20%3D%20buildProductIllustrationURI(product)%3B%0A%20%20%20%20%20%20img.alt%20%3D%20product.name%3B%0A%20%20%20%20%20%20img.className%20%3D%20%22w-full%20h-full%20object-cover%22%3B%0A%20%20%20%20%20%20imgWrapper.appendChild(img)%3B%0A%0A%20%20%20%20%20%20const%20catBadge%20%3D%20document.createElement(%22span%22)%3B%0A%20%20%20%20%20%20catBadge.className%20%3D%20%22absolute%20top-3%20left-3%20px-3%20py-1%20rounded-full%20bg-white%2F95%20text-emerald-950%20text-xs%20font-extrabold%20shadow-sm%22%3B%0A%20%20%20%20%20%20catBadge.textContent%20%3D%20product.category%3B%0A%20%20%20%20%20%20imgWrapper.appendChild(catBadge)%3B%0A%0A%20%20%20%20%20%20const%20stockBadge%20%3D%20document.createElement(%22span%22)%3B%0A%20%20%20%20%20%20stockBadge.className%20%3D%20%22absolute%20top-3%20right-3%20px-2.5%20py-1%20rounded-full%20bg-slate-900%2F85%20text-white%20text-xs%20font-semibold%22%3B%0A%20%20%20%20%20%20stockBadge.textContent%20%3D%20%60Stok%3A%20%24%7Bproduct.stock%7D%60%3B%0A%20%20%20%20%20%20imgWrapper.appendChild(stockBadge)%3B%0A%0A%20%20%20%20%20%20%2F%2F%20Konten%20Kartu%0A%20%20%20%20%20%20const%20body%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20%20%20body.className%20%3D%20%22p-5%20flex-1%20flex%20flex-col%20justify-between%20space-y-4%22%3B%0A%0A%20%20%20%20%20%20const%20infoTop%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20%20%20infoTop.className%20%3D%20%22space-y-2%22%3B%0A%0A%20%20%20%20%20%20const%20title%20%3D%20document.createElement(%22h3%22)%3B%0A%20%20%20%20%20%20title.className%20%3D%20%22text-lg%20font-extrabold%20text-slate-900%20leading-snug%22%3B%0A%20%20%20%20%20%20title.textContent%20%3D%20product.name%3B%0A%0A%20%20%20%20%20%20const%20desc%20%3D%20document.createElement(%22p%22)%3B%0A%20%20%20%20%20%20desc.className%20%3D%20%22text-xs%20sm%3Atext-sm%20text-slate-600%20line-clamp-2%20leading-relaxed%22%3B%0A%20%20%20%20%20%20desc.textContent%20%3D%20product.description%3B%0A%0A%20%20%20%20%20%20infoTop.appendChild(title)%3B%0A%20%20%20%20%20%20infoTop.appendChild(desc)%3B%0A%0A%20%20%20%20%20%20const%20footer%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20%20%20footer.className%20%3D%20%22pt-3%20border-t%20border-slate-100%20space-y-3%22%3B%0A%0A%20%20%20%20%20%20const%20priceEl%20%3D%20document.createElement(%22p%22)%3B%0A%20%20%20%20%20%20priceEl.className%20%3D%20%22text-lg%20font-extrabold%20text-[#064E3B]%22%3B%0A%20%20%20%20%20%20priceEl.textContent%20%3D%20formatRupiah(product.price)%3B%0A%0A%20%20%20%20%20%20const%20btnRow%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20%20%20btnRow.className%20%3D%20%22flex%20items-center%20gap-2.5%22%3B%0A%0A%20%20%20%20%20%20const%20btnDetail%20%3D%20document.createElement(%22button%22)%3B%0A%20%20%20%20%20%20btnDetail.type%20%3D%20%22button%22%3B%0A%20%20%20%20%20%20btnDetail.className%20%3D%20%22touch-btn%20px-4%20py-2.5%20rounded-xl%20border%20border-slate-300%20text-slate-700%20hover%3Abg-slate-100%20text-xs%20font-bold%20transition%22%3B%0A%20%20%20%20%20%20btnDetail.textContent%20%3D%20%22Detail%22%3B%0A%20%20%20%20%20%20btnDetail.addEventListener(%22click%22%2C%20()%20%3D%3E%20openProductDetail(product))%3B%0A%0A%20%20%20%20%20%20const%20btnAdd%20%3D%20document.createElement(%22button%22)%3B%0A%20%20%20%20%20%20btnAdd.type%20%3D%20%22button%22%3B%0A%20%20%20%20%20%20btnAdd.className%20%3D%20%22touch-btn%20flex-1%20px-4%20py-2.5%20rounded-xl%20bg-[#D97706]%20hover%3Abg-[#B45309]%20text-white%20text-xs%20font-extrabold%20shadow-sm%20transition%22%3B%0A%20%20%20%20%20%20btnAdd.textContent%20%3D%20%22%2B%20Keranjang%22%3B%0A%20%20%20%20%20%20btnAdd.addEventListener(%22click%22%2C%20()%20%3D%3E%20addToCart(product))%3B%0A%0A%20%20%20%20%20%20btnRow.appendChild(btnDetail)%3B%0A%20%20%20%20%20%20btnRow.appendChild(btnAdd)%3B%0A%20%20%20%20%20%20footer.appendChild(priceEl)%3B%0A%20%20%20%20%20%20footer.appendChild(btnRow)%3B%0A%0A%20%20%20%20%20%20body.appendChild(infoTop)%3B%0A%20%20%20%20%20%20body.appendChild(footer)%3B%0A%0A%20%20%20%20%20%20card.appendChild(imgWrapper)%3B%0A%20%20%20%20%20%20card.appendChild(body)%3B%0A%20%20%20%20%20%20grid.appendChild(card)%3B%0A%20%20%20%20%7D)%3B%0A%20%20%7D%0A%0A%20%20%2F%2F%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%204.%20MODAL%20DETAIL%20PRODUK%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%20%20const%20detailModal%20%3D%20document.getElementById(%22productDetailModal%22)%3B%0A%0A%20%20function%20openProductDetail(product)%20%7B%0A%20%20%20%20state.activeProductDetail%20%3D%20product%3B%0A%20%20%20%20document.getElementById(%22detailModalCategory%22).textContent%20%3D%20product.category%3B%0A%20%20%20%20document.getElementById(%22detailModalTitle%22).textContent%20%3D%20product.name%3B%0A%20%20%20%20document.getElementById(%22detailModalPrice%22).textContent%20%3D%20formatRupiah(product.price)%3B%0A%20%20%20%20document.getElementById(%22detailModalStock%22).textContent%20%3D%20%60Tersedia%3A%20%24%7Bproduct.stock%7D%20unit%60%3B%0A%20%20%20%20document.getElementById(%22detailModalDesc%22).textContent%20%3D%20product.description%3B%0A%20%20%20%20document.getElementById(%22detailModalOrigin%22).textContent%20%3D%20product.origin%3B%0A%20%20%20%20const%20imgEl%20%3D%20document.getElementById(%22detailModalImage%22)%3B%0A%20%20%20%20imgEl.src%20%3D%20buildProductIllustrationURI(product)%3B%0A%20%20%20%20imgEl.alt%20%3D%20product.name%3B%0A%20%20%20%20detailModal.classList.remove(%22hidden%22)%3B%0A%20%20%7D%0A%0A%20%20document.getElementById(%22btnCloseDetailModal%22).addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20detailModal.classList.add(%22hidden%22)%3B%0A%20%20%7D)%3B%0A%0A%20%20document.getElementById(%22btnDetailAddToCart%22).addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20if%20(state.activeProductDetail)%20%7B%0A%20%20%20%20%20%20addToCart(state.activeProductDetail)%3B%0A%20%20%20%20%20%20detailModal.classList.add(%22hidden%22)%3B%0A%20%20%20%20%7D%0A%20%20%7D)%3B%0A%0A%20%20%2F%2F%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%205.%20SISTEM%20KERANJANG%20%26%20CHECKOUT%20AMAN%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%20%20function%20addToCart(product)%20%7B%0A%20%20%20%20const%20existing%20%3D%20state.cart.find((c)%20%3D%3E%20c.id%20%3D%3D%3D%20product.id)%3B%0A%20%20%20%20if%20(existing)%20%7B%0A%20%20%20%20%20%20if%20(existing.qty%20%3E%3D%20product.stock)%20%7B%0A%20%20%20%20%20%20%20%20showToast(%22Jumlah%20melebihi%20batas%20stok%20tersedia.%22%2C%20%22error%22)%3B%0A%20%20%20%20%20%20%20%20return%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20existing.qty%20%2B%3D%201%3B%0A%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20state.cart.push(%7B%20...product%2C%20qty%3A%201%20%7D)%3B%0A%20%20%20%20%7D%0A%20%20%20%20updateCartUI()%3B%0A%20%20%20%20showToast(%60%22%24%7Bproduct.name%7D%22%20ditambahkan%20ke%20keranjang.%60)%3B%0A%20%20%7D%0A%0A%20%20function%20changeCartQty(productId%2C%20delta)%20%7B%0A%20%20%20%20const%20idx%20%3D%20state.cart.findIndex((c)%20%3D%3E%20c.id%20%3D%3D%3D%20productId)%3B%0A%20%20%20%20if%20(idx%20%3D%3D%3D%20-1)%20return%3B%0A%20%20%20%20const%20item%20%3D%20state.cart%5Bidx%5D%3B%0A%20%20%20%20const%20nextQty%20%3D%20item.qty%20%2B%20delta%3B%0A%0A%20%20%20%20if%20(nextQty%20%3C%3D%200)%20%7B%0A%20%20%20%20%20%20state.cart.splice(idx%2C%201)%3B%0A%20%20%20%20%7D%20else%20if%20(nextQty%20%3E%20item.stock)%20%7B%0A%20%20%20%20%20%20showToast(%22Stok%20maksimal%20tercapai.%22%2C%20%22error%22)%3B%0A%20%20%20%20%20%20return%3B%0A%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20item.qty%20%3D%20nextQty%3B%0A%20%20%20%20%7D%0A%20%20%20%20updateCartUI()%3B%0A%20%20%7D%0A%0A%20%20function%20updateCartUI()%20%7B%0A%20%20%20%20const%20badge%20%3D%20document.getElementById(%22cartBadge%22)%3B%0A%20%20%20%20const%20container%20%3D%20document.getElementById(%22cartItemsContainer%22)%3B%0A%20%20%20%20const%20summaryBox%20%3D%20document.getElementById(%22cartSummaryBox%22)%3B%0A%20%20%20%20const%20checkoutForm%20%3D%20document.getElementById(%22checkoutForm%22)%3B%0A%0A%20%20%20%20const%20totalQty%20%3D%20state.cart.reduce((sum%2C%20item)%20%3D%3E%20sum%20%2B%20item.qty%2C%200)%3B%0A%20%20%20%20const%20totalPrice%20%3D%20state.cart.reduce((sum%2C%20item)%20%3D%3E%20sum%20%2B%20item.price%20*%20item.qty%2C%200)%3B%0A%0A%20%20%20%20badge.textContent%20%3D%20String(totalQty)%3B%0A%0A%20%20%20%20while%20(container.firstChild)%20%7B%0A%20%20%20%20%20%20container.removeChild(container.firstChild)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20if%20(state.cart.length%20%3D%3D%3D%200)%20%7B%0A%20%20%20%20%20%20summaryBox.classList.add(%22hidden%22)%3B%0A%20%20%20%20%20%20checkoutForm.classList.add(%22hidden%22)%3B%0A%20%20%20%20%20%20const%20emptyMsg%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20%20%20emptyMsg.className%20%3D%20%22text-center%20py-12%20px-4%20rounded-2xl%20bg-slate-50%20border%20border-dashed%20border-slate-300%20space-y-2%22%3B%0A%20%20%20%20%20%20const%20p1%20%3D%20document.createElement(%22p%22)%3B%0A%20%20%20%20%20%20p1.className%20%3D%20%22font-bold%20text-slate-800%22%3B%0A%20%20%20%20%20%20p1.textContent%20%3D%20%22Keranjang%20belanja%20masih%20kosong%22%3B%0A%20%20%20%20%20%20const%20p2%20%3D%20document.createElement(%22p%22)%3B%0A%20%20%20%20%20%20p2.className%20%3D%20%22text-xs%20text-slate-500%22%3B%0A%20%20%20%20%20%20p2.textContent%20%3D%20%22Silakan%20pilih%20produk%20UMKM%20pada%20katalog%20untuk%20memulai%20pesanan.%22%3B%0A%20%20%20%20%20%20emptyMsg.appendChild(p1)%3B%0A%20%20%20%20%20%20emptyMsg.appendChild(p2)%3B%0A%20%20%20%20%20%20container.appendChild(emptyMsg)%3B%0A%20%20%20%20%20%20return%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20summaryBox.classList.remove(%22hidden%22)%3B%0A%20%20%20%20checkoutForm.classList.remove(%22hidden%22)%3B%0A%20%20%20%20document.getElementById(%22summaryTotalQty%22).textContent%20%3D%20%60%24%7BtotalQty%7D%20pcs%60%3B%0A%20%20%20%20document.getElementById(%22summaryTotalPrice%22).textContent%20%3D%20formatRupiah(totalPrice)%3B%0A%0A%20%20%20%20state.cart.forEach((item)%20%3D%3E%20%7B%0A%20%20%20%20%20%20const%20row%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20%20%20row.className%20%3D%20%22p-3.5%20rounded-2xl%20border%20border-slate-200%20bg-white%20flex%20items-center%20justify-between%20gap-3%22%3B%0A%0A%20%20%20%20%20%20const%20info%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20%20%20info.className%20%3D%20%22min-w-0%20flex-1%22%3B%0A%20%20%20%20%20%20const%20nameEl%20%3D%20document.createElement(%22p%22)%3B%0A%20%20%20%20%20%20nameEl.className%20%3D%20%22text-sm%20font-bold%20text-slate-900%20truncate%22%3B%0A%20%20%20%20%20%20nameEl.textContent%20%3D%20item.name%3B%0A%20%20%20%20%20%20const%20subEl%20%3D%20document.createElement(%22p%22)%3B%0A%20%20%20%20%20%20subEl.className%20%3D%20%22text-xs%20font-semibold%20text-emerald-800%22%3B%0A%20%20%20%20%20%20subEl.textContent%20%3D%20formatRupiah(item.price%20*%20item.qty)%3B%0A%20%20%20%20%20%20info.appendChild(nameEl)%3B%0A%20%20%20%20%20%20info.appendChild(subEl)%3B%0A%0A%20%20%20%20%20%20const%20controls%20%3D%20document.createElement(%22div%22)%3B%0A%20%20%20%20%20%20controls.className%20%3D%20%22flex%20items-center%20gap-1.5%22%3B%0A%0A%20%20%20%20%20%20const%20btnDec%20%3D%20document.createElement(%22button%22)%3B%0A%20%20%20%20%20%20btnDec.type%20%3D%20%22button%22%3B%0A%20%20%20%20%20%20btnDec.className%20%3D%20%22w-9%20h-9%20rounded-xl%20bg-slate-100%20hover%3Abg-slate-200%20font-extrabold%20text-slate-800%22%3B%0A%20%20%20%20%20%20btnDec.textContent%20%3D%20%22-%22%3B%0A%20%20%20%20%20%20btnDec.addEventListener(%22click%22%2C%20()%20%3D%3E%20changeCartQty(item.id%2C%20-1))%3B%0A%0A%20%20%20%20%20%20const%20qtyLabel%20%3D%20document.createElement(%22span%22)%3B%0A%20%20%20%20%20%20qtyLabel.className%20%3D%20%22w-7%20text-center%20text-xs%20font-extrabold%20text-slate-900%22%3B%0A%20%20%20%20%20%20qtyLabel.textContent%20%3D%20String(item.qty)%3B%0A%0A%20%20%20%20%20%20const%20btnInc%20%3D%20document.createElement(%22button%22)%3B%0A%20%20%20%20%20%20btnInc.type%20%3D%20%22button%22%3B%0A%20%20%20%20%20%20btnInc.className%20%3D%20%22w-9%20h-9%20rounded-xl%20bg-slate-100%20hover%3Abg-slate-200%20font-extrabold%20text-slate-800%22%3B%0A%20%20%20%20%20%20btnInc.textContent%20%3D%20%22%2B%22%3B%0A%20%20%20%20%20%20btnInc.addEventListener(%22click%22%2C%20()%20%3D%3E%20changeCartQty(item.id%2C%201))%3B%0A%0A%20%20%20%20%20%20controls.appendChild(btnDec)%3B%0A%20%20%20%20%20%20controls.appendChild(qtyLabel)%3B%0A%20%20%20%20%20%20controls.appendChild(btnInc)%3B%0A%0A%20%20%20%20%20%20row.appendChild(info)%3B%0A%20%20%20%20%20%20row.appendChild(controls)%3B%0A%20%20%20%20%20%20container.appendChild(row)%3B%0A%20%20%20%20%7D)%3B%0A%20%20%7D%0A%0A%20%20%2F%2F%20Validasi%20%26%20Submit%20Form%20Checkout%0A%20%20const%20checkoutForm%20%3D%20document.getElementById(%22checkoutForm%22)%3B%0A%20%20const%20formErrorMsg%20%3D%20document.getElementById(%22formErrorMsg%22)%3B%0A%20%20const%20orderConfirmationBox%20%3D%20document.getElementById(%22orderConfirmationBox%22)%3B%0A%20%20const%20orderReceiptText%20%3D%20document.getElementById(%22orderReceiptText%22)%3B%0A%0A%20%20checkoutForm.addEventListener(%22submit%22%2C%20(e)%20%3D%3E%20%7B%0A%20%20%20%20e.preventDefault()%3B%0A%20%20%20%20formErrorMsg.classList.add(%22hidden%22)%3B%0A%0A%20%20%20%20const%20rawName%20%3D%20sanitizeText(document.getElementById(%22customerName%22).value%2C%2050)%3B%0A%20%20%20%20const%20rawPhone%20%3D%20sanitizeText(document.getElementById(%22customerPhone%22).value%2C%2016).replace(%2F%5B%5E0-9%2B%5D%2Fg%2C%20%22%22)%3B%0A%20%20%20%20const%20rawAddr%20%3D%20sanitizeText(document.getElementById(%22customerAddress%22).value%2C%20200)%3B%0A%0A%20%20%20%20if%20(rawName.length%20%3C%203)%20%7B%0A%20%20%20%20%20%20formErrorMsg.textContent%20%3D%20%22Nama%20pemesan%20minimal%203%20karakter.%22%3B%0A%20%20%20%20%20%20formErrorMsg.classList.remove(%22hidden%22)%3B%0A%20%20%20%20%20%20return%3B%0A%20%20%20%20%7D%0A%20%20%20%20if%20(!%2F%5E(%5C%2B62%7C62%7C0)8%5B1-9%5D%5B0-9%5D%7B6%2C11%7D%24%2F.test(rawPhone))%20%7B%0A%20%20%20%20%20%20formErrorMsg.textContent%20%3D%20%22Masukkan%20nomor%20WhatsApp%20Indonesia%20yang%20valid%20(contoh%3A%20081234567890).%22%3B%0A%20%20%20%20%20%20formErrorMsg.classList.remove(%22hidden%22)%3B%0A%20%20%20%20%20%20return%3B%0A%20%20%20%20%7D%0A%20%20%20%20if%20(rawAddr.length%20%3C%2010)%20%7B%0A%20%20%20%20%20%20formErrorMsg.textContent%20%3D%20%22Alamat%20pengiriman%20minimal%2010%20karakter.%22%3B%0A%20%20%20%20%20%20formErrorMsg.classList.remove(%22hidden%22)%3B%0A%20%20%20%20%20%20return%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20const%20orderId%20%3D%20%22ORD-%22%20%2B%20Date.now().toString().slice(-6)%3B%0A%20%20%20%20const%20totalPrice%20%3D%20state.cart.reduce((s%2C%20i)%20%3D%3E%20s%20%2B%20i.price%20*%20i.qty%2C%200)%3B%0A%20%20%20%20const%20lines%20%3D%20state.cart.map((i%2C%20idx)%20%3D%3E%20%60%24%7Bidx%20%2B%201%7D.%20%24%7Bi.name%7D%20(x%24%7Bi.qty%7D)%20-%20%24%7BformatRupiah(i.price%20*%20i.qty)%7D%60)%3B%0A%0A%20%20%20%20const%20receipt%20%3D%20%5B%0A%20%20%20%20%20%20%60NO.%20PESANAN%3A%20%24%7BorderId%7D%60%2C%0A%20%20%20%20%20%20%60Pemesan%3A%20%24%7BrawName%7D%20(%24%7BrawPhone%7D)%60%2C%0A%20%20%20%20%20%20%60Alamat%3A%20%24%7BrawAddr%7D%60%2C%0A%20%20%20%20%20%20%22----------------------------%22%2C%0A%20%20%20%20%20%20...lines%2C%0A%20%20%20%20%20%20%22----------------------------%22%2C%0A%20%20%20%20%20%20%60TOTAL%20BAYAR%3A%20%24%7BformatRupiah(totalPrice)%7D%60%0A%20%20%20%20%5D.join(%22%5Cn%22)%3B%0A%0A%20%20%20%20orderReceiptText.textContent%20%3D%20receipt%3B%0A%20%20%20%20checkoutForm.classList.add(%22hidden%22)%3B%0A%20%20%20%20orderConfirmationBox.classList.remove(%22hidden%22)%3B%0A%20%20%20%20showToast(%22Pesanan%20Anda%20telah%20tercatat!%22)%3B%0A%20%20%7D)%3B%0A%0A%20%20document.getElementById(%22btnCopyReceipt%22).addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20copyStringToClipboard(orderReceiptText.textContent%2C%20%22Rincian%20pesanan%20berhasil%20disalin!%22)%3B%0A%20%20%7D)%3B%0A%0A%20%20document.getElementById(%22btnNewOrder%22).addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20state.cart%20%3D%20%5B%5D%3B%0A%20%20%20%20checkoutForm.reset()%3B%0A%20%20%20%20orderConfirmationBox.classList.add(%22hidden%22)%3B%0A%20%20%20%20updateCartUI()%3B%0A%20%20%20%20document.getElementById(%22cartDrawerOverlay%22).classList.add(%22hidden%22)%3B%0A%20%20%7D)%3B%0A%0A%20%20%2F%2F%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%206.%20EVENT%20LISTENER%20FILTER%2C%20SEARCH%2C%20DRAWER%20%26%20MOBILE%20NAV%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%20%20document.querySelectorAll(%22.category-btn%22).forEach((btn)%20%3D%3E%20%7B%0A%20%20%20%20btn.addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20%20%20state.selectedCategory%20%3D%20btn.getAttribute(%22data-category%22)%20%7C%7C%20%22Semua%22%3B%0A%20%20%20%20%20%20document.querySelectorAll(%22.category-btn%22).forEach((b)%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20b.className%20%3D%20%22category-btn%20touch-btn%20px-5%20py-2.5%20rounded-2xl%20text-sm%20font-bold%20bg-slate-100%20text-slate-700%20hover%3Abg-slate-200%20transition%22%3B%0A%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%20%20btn.className%20%3D%20%22category-btn%20touch-btn%20px-5%20py-2.5%20rounded-2xl%20text-sm%20font-bold%20bg-%5B%23064E3B%5D%20text-white%20shadow-sm%20transition%22%3B%0A%20%20%20%20%20%20renderCatalog()%3B%0A%20%20%20%20%7D)%3B%0A%20%20%7D)%3B%0A%0A%20%20const%20searchInput%20%3D%20document.getElementById(%22searchInput%22)%3B%0A%20%20searchInput.addEventListener(%22input%22%2C%20(e)%20%3D%3E%20%7B%0A%20%20%20%20state.searchQuery%20%3D%20sanitizeText(e.target.value%2C%2060)%3B%0A%20%20%20%20renderCatalog()%3B%0A%20%20%7D)%3B%0A%0A%20%20document.getElementById(%22btnResetFilter%22).addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20state.selectedCategory%20%3D%20%22Semua%22%3B%0A%20%20%20%20state.searchQuery%20%3D%20%22%22%3B%0A%20%20%20%20searchInput.value%20%3D%20%22%22%3B%0A%20%20%20%20document.querySelectorAll(%22.category-btn%22).forEach((b%2C%20i)%20%3D%3E%20%7B%0A%20%20%20%20%20%20b.className%20%3D%20i%20%3D%3D%3D%200%0A%20%20%20%20%20%20%20%20%3F%20%22category-btn%20touch-btn%20px-5%20py-2.5%20rounded-2xl%20text-sm%20font-bold%20bg-%5B%23064E3B%5D%20text-white%20shadow-sm%20transition%22%0A%20%20%20%20%20%20%20%20%3A%20%22category-btn%20touch-btn%20px-5%20py-2.5%20rounded-2xl%20text-sm%20font-bold%20bg-slate-100%20text-slate-700%20hover%3Abg-slate-200%20transition%22%3B%0A%20%20%20%20%7D)%3B%0A%20%20%20%20renderCatalog()%3B%0A%20%20%7D)%3B%0A%0A%20%20const%20cartOverlay%20%3D%20document.getElementById(%22cartDrawerOverlay%22)%3B%0A%20%20document.getElementById(%22btnOpenCart%22).addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20cartOverlay.classList.remove(%22hidden%22)%3B%0A%20%20%7D)%3B%0A%20%20document.getElementById(%22btnCloseCart%22).addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20cartOverlay.classList.add(%22hidden%22)%3B%0A%20%20%7D)%3B%0A%0A%20%20const%20mobileDrawer%20%3D%20document.getElementById(%22mobileMenuDrawer%22)%3B%0A%20%20const%20btnMobileMenu%20%3D%20document.getElementById(%22btnMobileMenu%22)%3B%0A%20%20btnMobileMenu.addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20const%20isHidden%20%3D%20mobileDrawer.classList.toggle(%22hidden%22)%3B%0A%20%20%20%20btnMobileMenu.setAttribute(%22aria-expanded%22%2C%20String(!isHidden))%3B%0A%20%20%7D)%3B%0A%20%20document.querySelectorAll(%22.mobile-nav-link%22).forEach((link)%20%3D%3E%20%7B%0A%20%20%20%20link.addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20%20%20mobileDrawer.classList.add(%22hidden%22)%3B%0A%20%20%20%20%20%20btnMobileMenu.setAttribute(%22aria-expanded%22%2C%20%22false%22)%3B%0A%20%20%20%20%7D)%3B%0A%20%20%7D)%3B%0A%0A%20%20%2F%2F%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%207.%20MODULAR%20SOURCE%20CODE%20VIEWER%20(4%20FILE%20PRODUKSI)%20%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%20%20const%20PRODUCTION_FILES%20%3D%20%7B%0A%20%20%20%20%22index.html%22%3A%20%60%3C!DOCTYPE%20html%3E%0A%3Chtml%20lang%3D%22id%22%20class%3D%22scroll-smooth%22%3E%0A%3Chead%3E%0A%20%20%3Cmeta%20charset%3D%22UTF-8%22%20%2F%3E%0A%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%22%20%2F%3E%0A%20%20%3Cmeta%20name%3D%22referrer%22%20content%3D%22strict-origin-when-cross-origin%22%20%2F%3E%0A%20%20%3Cmeta%20http-equiv%3D%22Content-Security-Policy%22%20content%3D%22default-src%20'self'%3B%20script-src%20'self'%20https%3A%2F%2Fcdn.tailwindcss.com%3B%20style-src%20'self'%20https%3A%2F%2Fcdn.tailwindcss.com%20'sha256-47DEQpj8HBSa%2B%2FTImW%2B5JCeuQeRkm5NMpJWZG3hSuFU%3D'%3B%20img-src%20'self'%20data%3A%3B%20font-src%20'self'%3B%20connect-src%20'self'%3B%20object-src%20'none'%3B%20base-uri%20'self'%3B%20form-action%20'self'%3B%20frame-ancestors%20'none'%3B%22%20%2F%3E%0A%20%20%3Ctitle%3EWebsite%20Katalog%20Produk%20%26%20Profil%20Usaha%20UMKM%3C%2Ftitle%3E%0A%20%20%3Cscript%20src%3D%22https%3A%2F%2Fcdn.tailwindcss.com%22%3E%3C%2Fscript%3E%0A%20%20%3Clink%20rel%3D%22stylesheet%22%20href%3D%22style.css%22%20%2F%3E%0A%3C%2Fhead%3E%0A%3Cbody%3E%0A%20%20%3C!--%20Struktur%20HTML%20identik%20dengan%20pratinjau%20aktif%20--%3E%0A%20%20%3Cscript%20src%3D%22app.js%22%20defer%3E%3C%2Fscript%3E%0A%3C%2Fbody%3E%0A%3C%2Fhtml%3E%60%2C%0A%20%20%20%20%22style.css%22%3A%20%60%3Aroot%20%7B%0A%20%20--bg-primary%3A%20%23F8FAFC%3B%0A%20%20--brand-emerald%3A%20%23064E3B%3B%0A%20%20--brand-slate%3A%20%230F172A%3B%0A%20%20--accent-amber%3A%20%23D97706%3B%0A%7D%0Abody%20%7B%0A%20%20background-color%3A%20var(--bg-primary)%3B%0A%20%20color%3A%20var(--brand-slate)%3B%0A%20%20overflow-x%3A%20hidden%3B%0A%7D%0A.touch-btn%20%7B%0A%20%20min-height%3A%2044px%3B%0A%20%20min-width%3A%2044px%3B%0A%7D%0A.product-card%20%7B%0A%20%20transition%3A%20transform%200.22s%20ease%2C%20box-shadow%200.22s%20ease%3B%0A%7D%0A.product-card%3Ahover%20%7B%0A%20%20transform%20%3A%20translateY(-4px)%3B%0A%20%20box-shadow%3A%200%2014px%2028px%20-10px%20rgba(6%2C%2078%2C%2059%2C%200.16)%3B%0A%7D%60%2C%0A%20%20%20%20%22app.js%22%3A%20%60%22use%20strict%22%3B%0A%2F%2F%20Logika%20katalog%20UMKM%2C%20filter%2C%20keranjang%20%26%20checkout%20dengan%20100%25%20DOM%20textContent%20(Anti-XSS)%0A%2F%2F%20Gunakan%20kode%20JS%20lengkap%20dari%20berkas%20utama%20ini%20tanpa%20innerHTML.%60%2C%0A%20%20%20%20%22vercel.json%22%3A%20JSON.stringify(%7B%0A%20%20%20%20%20%20headers%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20source%3A%20%22%2F(.*)%22%2C%0A%20%20%20%20%20%20%20%20%20%20headers%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20key%3A%20%22Content-Security-Policy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20value%3A%20%22default-src%20'self'%3B%20script-src%20'self'%20https%3A%2F%2Fcdn.tailwindcss.com%3B%20style-src%20'self'%20https%3A%2F%2Fcdn.tailwindcss.com%3B%20img-src%20'self'%20data%3A%3B%20font-src%20'self'%3B%20connect-src%20'self'%3B%20object-src%20'none'%3B%20base-uri%20'self'%3B%20form-action%20'self'%3B%20frame-ancestors%20'none'%3B%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20key%3A%20%22X-Frame-Options%22%2C%20value%3A%20%22DENY%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20key%3A%20%22X-Content-Type-Options%22%2C%20value%3A%20%22nosniff%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20key%3A%20%22Strict-Transport-Security%22%2C%20value%3A%20%22max-age%3D31536000%3B%20includeSubDomains%3B%20preload%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20key%3A%20%22Referrer-Policy%22%2C%20value%3A%20%22strict-origin-when-cross-origin%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20key%3A%20%22Permissions-Policy%22%2C%20value%3A%20%22camera%3D()%2C%20microphone%3D()%2C%20geolocation%3D()%2C%20payment%3D()%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20key%3A%20%22Cross-Origin-Opener-Policy%22%2C%20value%3A%20%22same-origin%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20key%3A%20%22Cross-Origin-Resource-Policy%22%2C%20value%3A%20%22same-origin%22%20%7D%0A%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%5D%0A%20%20%20%20%7D%2C%20null%2C%202)%0A%20%20%7D%3B%0A%0A%20%20const%20sourceModal%20%3D%20document.getElementById(%22sourceCodeModal%22)%3B%0A%20%20const%20sourceViewer%20%3D%20document.getElementById(%22sourceCodeViewer%22)%3B%0A%0A%20%20function%20renderSourceTab(fileName)%20%7B%0A%20%20%20%20state.activeSourceTab%20%3D%20fileName%3B%0A%20%20%20%20sourceViewer.textContent%20%3D%20PRODUCTION_FILES%5BfileName%5D%20%7C%7C%20%22%22%3B%0A%20%20%20%20document.querySelectorAll(%22.source-tab-btn%22).forEach((btn)%20%3D%3E%20%7B%0A%20%20%20%20%20%20const%20isActive%20%3D%20btn.getAttribute(%22data-file%22)%20%3D%3D%3D%20fileName%3B%0A%20%20%20%20%20%20btn.className%20%3D%20isActive%0A%20%20%20%20%20%20%20%20%3F%20%22source-tab-btn%20touch-btn%20px-3.5%20py-2%20rounded-xl%20text-xs%20font-extrabold%20bg-%5B%23064E3B%5D%20text-white%22%0A%20%20%20%20%20%20%20%20%3A%20%22source-tab-btn%20touch-btn%20px-3.5%20py-2%20rounded-xl%20text-xs%20font-extrabold%20bg-white%20text-slate-700%20border%20border-slate-300%22%3B%0A%20%20%20%20%7D)%3B%0A%20%20%7D%0A%0A%20%20function%20openSourceModal()%20%7B%0A%20%20%20%20renderSourceTab(state.activeSourceTab)%3B%0A%20%20%20%20sourceModal.classList.remove(%22hidden%22)%3B%0A%20%20%7D%0A%0A%20%20%5B%22btnOpenSourceDesktop%22%2C%20%22btnOpenSourceMobile%22%2C%20%22btnOpenSourceFooter%22%5D.forEach((id)%20%3D%3E%20%7B%0A%20%20%20%20const%20el%20%3D%20document.getElementById(id)%3B%0A%20%20%20%20if%20(el)%20el.addEventListener(%22click%22%2C%20openSourceModal)%3B%0A%20%20%7D)%3B%0A%0A%20%20document.getElementById(%22btnCloseSourceModal%22).addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20sourceModal.classList.add(%22hidden%22)%3B%0A%20%20%7D)%3B%0A%0A%20%20document.querySelectorAll(%22.source-tab-btn%22).forEach((btn)%20%3D%3E%20%7B%0A%20%20%20%20btn.addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20%20%20renderSourceTab(btn.getAttribute(%22data-file%22))%3B%0A%20%20%20%20%7D)%3B%0A%20%20%7D)%3B%0A%0A%20%20document.getElementById(%22btnCopySourceFile%22).addEventListener(%22click%22%2C%20()%20%3D%3E%20%7B%0A%20%20%20%20copyStringToClipboard(sourceViewer.textContent%2C%20%60Kode%20%24%7Bstate.activeSourceTab%7D%20berhasil%20disalin!%60)%3B%0A%20%20%7D)%3B%0A%0A%20%20function%20copyStringToClipboard(text%2C%20successMessage)%20%7B%0A%20%20%20%20const%20ta%20%3D%20document.createElement(%22textarea%22)%3B%0A%20%20%20%20ta.value%20%3D%20text%3B%0A%20%20%20%20ta.style.position%20%3D%20%22fixed%22%3B%0A%20%20%20%20ta.style.opacity%20%3D%20%220%22%3B%0A%20%20%20%20document.body.appendChild(ta)%3B%0A%20%20%20%20ta.select()%3B%0A%20%20%20%20try%20%7B%0A%20%20%20%20%20%20document.execCommand(%22copy%22)%3B%0A%20%20%20%20%20%20showToast(successMessage)%3B%0A%20%20%20%20%7D%20catch%20(_err)%20%7B%0A%20%20%20%20%20%20showToast(%22Gagal%20menyalin%20otomatis.%20Silakan%20salin%20manual.%22%2C%20%22error%22)%3B%0A%20%20%20%20%7D%0A%20%20%20%20document.body.removeChild(ta)%3B%0A%20%20%7D%0A%0A%20%20%2F%2F%20Render%20Awal%0A%20%20renderCatalog()%3B%0A%20%20updateCartUI()%3B%0A%7D)()%3B%0A" defer></script>
+</body>
+</html>
